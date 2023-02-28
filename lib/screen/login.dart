@@ -301,9 +301,6 @@ class _login1State extends State<login1> {
                 // isLoading = false;
               });
               await SaveDataLocal.saveLogInData(userData!);
-              print(userData?.data?.clientid);
-
-
 
               if (kDebugMode) {}
               // buildErrorDialog(context, "", "Login Successfully");
@@ -311,6 +308,7 @@ class _login1State extends State<login1> {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => mytrips1()));
             } else {
+
               buildErrorDialog(context, "", "Invalid login");
             }
           });

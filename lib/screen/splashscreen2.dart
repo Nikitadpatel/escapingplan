@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:escapingplan/screen/login.dart';
 import 'package:escapingplan/screen/mytrips1.dart';
 import 'package:escapingplan/widget/const.dart';
@@ -13,7 +12,6 @@ class splashscreen2 extends StatefulWidget {
 }
 class _splashscreen2State extends State<splashscreen2> {
   void initState() {
-
     super.initState();
     getdata();
     // Timer(
@@ -59,7 +57,7 @@ class _splashscreen2State extends State<splashscreen2> {
               right: 10.w,
               child: GestureDetector(
                 onTap: ()async{
-                  print(userData);
+                 
                   (userData == null)?
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => login1())):
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => mytrips1()));

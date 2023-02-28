@@ -97,8 +97,10 @@ class _mytrips1State extends State<mytrips1> {
                                     fit: BoxFit.cover,
                                     ),
                               ),),
-                            placeholder: (context, url) =>  Center(
-                                child: CircularProgressIndicator()),
+                            placeholder: (context, url) =>  Container(
+                                child: CircularProgressIndicator(
+                                  color: Colors.black,
+                                )),
                             errorWidget: (context, url, error) =>
                                 Container(
                                   color: Colors.white,

@@ -11,6 +11,7 @@ import 'package:escapingplan/widget/buildErrorDialog.dart';
 import 'package:escapingplan/widget/const.dart';
 import 'package:escapingplan/widget/load.dart';
 import 'package:escapingplan/widget/sharedpreferance.dart';
+import 'package:escapingplan/widget/video.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -901,7 +902,10 @@ class _packagedetailState extends State<packagedetail> {
                                                        ),
                                                        Expanded(
                                                          flex:9,
-                                                         child: Text( (detailmodal?.itinerary?[index].dayDescription != "")?(detailmodal?.itinerary?[index].dayDescription ).toString():"No Description available.",textAlign: TextAlign.left,maxLines: 4,style: textstyle),
+                                                         child:isImageOrVideo((detailmodal?.itinerary?[index].dayDescription ?? "" )) == 1?Image.network(detailmodal?.itinerary?[index].dayDescription ?? "",height: 30.h,width: MediaQuery.of(context).size.width,):
+                                                         isImageOrVideo((detailmodal?.itinerary?[index].dayDescription ?? "" )) == 2?
+                                                             addVideo(videoid: detailmodal?.itinerary?[index].dayDescription)
+                                                         :Text((detailmodal?.itinerary?[index].dayDescription != "")?(detailmodal?.itinerary?[index].dayDescription ).toString():"No Description available.",textAlign: TextAlign.left,maxLines: 4,style: textstyle),
                                                        ),
                                                      ],
                                                    ),
@@ -1216,6 +1220,20 @@ class _packagedetailState extends State<packagedetail> {
         buildErrorDialog(context, 'Error', "Internate Required");
       }
     });
+  }
+  int isImageOrVideo(String str) {
+    final imageRegex = RegExp(r'\.(jpg|jpeg|png)$', caseSensitive: false);
+    final videoRegex = RegExp(r'\.(mp4|avi|mov)$', caseSensitive: false);
+
+    if (imageRegex.hasMatch(str) ) {
+      return 1;
+    }
+    else if(videoRegex.hasMatch(str)){
+      return 2;
+    }
+    else {
+      return 3;
+    }
   }
 
 }

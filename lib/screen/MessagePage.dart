@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -30,6 +31,7 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
+
 import 'dart:core';
 class MessagePage extends StatefulWidget {
   MessagePage({
@@ -88,6 +90,7 @@ class _MessagePageState extends State<MessagePage> {
     //   viewchat();
     // });
     view();
+
   }
   @override
   void dispose() {
@@ -208,11 +211,7 @@ class _MessagePageState extends State<MessagePage> {
                     SingleChildScrollView(
                       child: Container(
                         height: 79.5.h,
-                        child:
-                            (userData == null
-                                        ? 0
-                                        : messagemodel?.data?.length ?? 0) ==
-                                    0
+                        child: ((messagemodel?.data?.length ?? 0 ) == 0)
                                 ? SizedBox(
                                     child: Column(
                                       mainAxisAlignment:
@@ -221,13 +220,17 @@ class _MessagePageState extends State<MessagePage> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Center(
-                                            child: Text(
-                                          'No Message ',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16.0),
-                                        )),
+                                            child: CircularProgressIndicator(
+                                              color:Colors.black
+                                            )
+                                        //     Text(
+                                        //   'No Message ',
+                                        //   style: TextStyle(
+                                        //       color: Colors.black,
+                                        //       fontWeight: FontWeight.bold,
+                                        //       fontSize: 16.0),
+                                        // )
+                                        ),
                                       ],
                                     ),
                                   )
@@ -458,34 +461,33 @@ class _MessagePageState extends State<MessagePage> {
                                                                         ? Expanded(
                                                                             child: GestureDetector(
                                                                             onTap: () async {
-                                                                              // final String? url = (messagemodel?.data?[index].message);
-                                                                              // String fileExtension = path.extension(url!);
-                                                                              // print(fileExtension.toString());
-                                                                              // if(fileExtension==".txt"){
-                                                                              //   Navigator?.of(context).push(MaterialPageRoute(builder: (context)=>webview(data: messagemodel?.data?[index].message,)));
-                                                                              //
-                                                                              // }
-                                                                              // else{
-                                                                              //   print("object");
-                                                                              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>pdfview(data: messagemodel?.data?[index].message,)));
-                                                                              // }
-                                                                              var response = await http.get(Uri.parse((messagemodel?.data?[index].message).toString()));
                                                                               final String? url = (messagemodel?.data?[index].message);
-                                                                              String fileName = url.toString().split('/').last;
-                                                                              Directory? storageDirectory =Platform.isAndroid ?await getExternalStorageDirectory(): await getDownloadsDirectory();
-                                                                              String directoryPath = storageDirectory!.path;
-                                                                              File file = File('$directoryPath/$fileName');
-                                                                              // Directory directory = await getApplicationDocumentsDirectory();
-                                                                              await file.writeAsBytes(response.bodyBytes);
-                                                                              String filePath = '${storageDirectory.path}/$fileName';
-                                                                              print(filePath.toString());
-                                                                              try {
-                                                                                print("object");
-                                                                                final result = await OpenFile.open(filePath);
+                                                                              String fileExtension = path.extension(url!);
+                                                                              print(fileExtension.toString());
+                                                                              if(fileExtension==".txt"){
+                                                                                Navigator?.of(context).push(MaterialPageRoute(builder: (context)=>webview(data: messagemodel?.data?[index].message,)));
 
-                                                                              } catch (e) {
-                                                                                print(e.toString());
                                                                               }
+                                                                              else{
+                                                                                var response = await http.get(Uri.parse((messagemodel?.data?[index].message).toString()));
+
+                                                                                String fileName = url.toString().split('/').last;
+                                                                                Directory? storageDirectory =Platform.isAndroid ?await getExternalStorageDirectory(): await getDownloadsDirectory();
+                                                                                String directoryPath = storageDirectory!.path;
+                                                                                File file = File('$directoryPath/$fileName');
+                                                                                // Directory directory = await getApplicationDocumentsDirectory();
+                                                                                await file.writeAsBytes(response.bodyBytes);
+                                                                                String filePath = '${storageDirectory.path}/$fileName';
+                                                                                print(filePath.toString());
+                                                                                try {
+                                                                                  print("object");
+                                                                                  final result = await OpenFile.open(filePath);
+
+                                                                                } catch (e) {
+                                                                                  print(e.toString());
+                                                                                }
+                                                                              }
+
 
                                                                             },
                                                                             child: Container(
@@ -704,23 +706,8 @@ class _MessagePageState extends State<MessagePage> {
                                                                             ? Expanded(
                                                                                 child: GestureDetector(
                                                                                   onTap: () async {
-                                                                                    print("1234");
-                                                                                    final String link ="https://goo.gl/maps/xNP4vTNW96ztan9W7";
-                                                                                    print(link);
 
-                                                                                    final locationRegExp = RegExp(r'@([-0-9]+.[0-9]+),([-0-9]+.[0-9]+)');
-                                                                                    final match = locationRegExp.firstMatch(link);
-                                                                                    print(match);
-                                                                                    if (match != null) {
-                                                                                      // final latitude = double.parse(match.group(1));
-                                                                                      // final longitude = double.parse(match.group(2));
-                                                                                      // final placemarks = await placemarkFromCoordinates(latitude, longitude);
-                                                                                      // final placemark = placemarks.first;
-                                                                                      // setState(() {
-                                                                                      //   String   _address = '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
-                                                                                      // });
-                                                                                    }
-                                                                                    // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>webview2(data: messagemodel?.data?[index].message,)));
+                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>webview2(data: messagemodel?.data?[index].message,)));
 
                                                                                   },
                                                                                   child: Container(

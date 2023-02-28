@@ -1,6 +1,3 @@
-
-
-
 class UserModal {
   UserModal({
     int? status,
@@ -18,11 +15,9 @@ class UserModal {
   int? _status;
   String? _message;
   Data? _data;
-
   int? get status => _status;
   String? get message => _message;
   Data? get data => _data;
-
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['status'] = _status;
@@ -32,7 +27,6 @@ class UserModal {
     }
     return map;
   }
-
 }
 class Data {
   Data({
@@ -45,7 +39,6 @@ class Data {
     String? clientid,
     String? clientname,
     String? clientimage,
-
     }){
     _uId = uId;
     _username = username;
@@ -56,9 +49,7 @@ class Data {
     _clientid = clientid;
     _clientname = clientname;
     _clientimage = clientimage;
-
   }
-
   Data.fromJson(dynamic json) {
     _uId = json['u_id'];
     _username = json['username'];
@@ -88,7 +79,6 @@ class Data {
   String? get clientid => _clientid;
   String? get clientname => _clientname;
   String? get clientimage => _clientimage;
-
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['u_id'] = _uId;
@@ -100,9 +90,6 @@ class Data {
     map['client_id'] = _clientid;
     map["client_name"] = _clientname;
     map["profile_img"] = _clientimage ;
-
-
     return map;
   }
-
 }

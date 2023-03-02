@@ -20,6 +20,7 @@ class login1 extends StatefulWidget {
 }
 
 class _login1State extends State<login1> {
+  FocusNode _focusNode = FocusNode();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -106,7 +107,7 @@ class _login1State extends State<login1> {
                         //Convert string p to a RegEx
                         RegExp regExp = RegExp(p);
                         if (value!.isEmpty) {
-                          return 'Please enter Your Email';
+                          return 'Please enter your email';
                         } else {
                           //If email address matches pattern
                           if (regExp.hasMatch(value)) {
@@ -131,12 +132,13 @@ class _login1State extends State<login1> {
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(horizontal: 3.w),
                     child: TextFormField(
+
                       obscureText: visible,
                       keyboardType: TextInputType.text,
                       controller: _password,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Please enter Your Password';
+                          return 'Please enter your password';
                         }
                         return null;
                       },
@@ -206,6 +208,7 @@ class _login1State extends State<login1> {
                           )),
                         ),
                         onPressed: () {
+
                           login();
                         },
                         child: Row(
@@ -261,6 +264,9 @@ class _login1State extends State<login1> {
             width: 1,
           ),
         ),
+        errorStyle: TextStyle(
+          fontSize: 12.sp,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide(
@@ -309,7 +315,7 @@ class _login1State extends State<login1> {
                   .push(MaterialPageRoute(builder: (context) => mytrips1()));
             } else {
 
-              buildErrorDialog(context, "", "Invalid login");
+              buildErrorDialog(context, "Login Error", (userData?.message).toString());
             }
           });
         } else {

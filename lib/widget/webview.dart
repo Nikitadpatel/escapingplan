@@ -21,10 +21,10 @@ class _webviewState extends State<webview> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("File"),
-            GestureDetector(
-              onTap: (){},
-              child: Icon(Icons.download),
-            )
+            // GestureDetector(
+            //   onTap: (){},
+            //   child: Icon(Icons.download),
+            // )
           ],
         ),
       ),

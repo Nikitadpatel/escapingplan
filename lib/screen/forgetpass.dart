@@ -80,7 +80,7 @@ class _forgetpassState extends State<forgetpass> {
                         //Convert string p to a RegEx
                         RegExp regExp = RegExp(p);
                         if (value!.isEmpty) {
-                          return 'Please enter Email';
+                          return 'Please enter the email';
                         } else {
                           //If email address matches pattern
                           if (regExp.hasMatch(value)) {
@@ -177,6 +177,9 @@ class _forgetpassState extends State<forgetpass> {
             width: 1,
           ),
         ),
+        errorStyle: TextStyle(
+          fontSize: 12.sp,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide(
@@ -200,7 +203,7 @@ class _forgetpassState extends State<forgetpass> {
         focusColor: Colors.white);
   }
   forget(){
-    print("object");
+
     if (_formKey.currentState!.validate()) {
       final Map<String, String> data = {
       };

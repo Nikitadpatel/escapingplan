@@ -71,6 +71,7 @@ dependencies:
   gallery_saver: ^2.0.3
   flutter_downloader: ^1.10.2
   carousel_slider: ^4.0.0
+  flutter_html:
 
 
 

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:escapingplan/Modal/ProfileModel.dart';
 import 'package:escapingplan/Modal/viewmodel.dart';
@@ -50,9 +49,7 @@ class _profile2State extends State<profile2> {
     // TODO: implement initState
     super.initState();
     view();
-
   }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -113,7 +110,7 @@ class _profile2State extends State<profile2> {
                                   ),
                                 ),),
                               placeholder: (context, url) =>  Center(
-                                  child: CircularProgressIndicator(color: Colors.blue,)),
+                                  child: CircularProgressIndicator(color: Colors.black,)),
                               errorWidget: (context, url, error) =>
                                   Container(
                                     color: Colors.white,
@@ -365,74 +362,59 @@ class _profile2State extends State<profile2> {
 
                         lable: "Address",icon: Icon(Icons.home)),
                       ),
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      TextFormField(
-                        controller: _expertise,
-                        keyboardType: TextInputType.text,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter the Expertise";
-                          }
-                          return null;
-                        },
-                        decoration: inputDecoration(hinttext:  (viewmodel?.data?.expertise == null)?"Expertise":_expertise.text,
-                            lable: "Expertise",icon: Icon(Icons.location_city)),
-                      ),
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      TextFormField(
-                        controller: _emergency_contact,
-                        keyboardType: TextInputType.phone,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter the Emergency Contact Number";
-                          }
-                          return null;
-                        },
-                        decoration: inputDecoration(hinttext:
-                        (viewmodel?.data?.emergencyContact == null)?
-                        "Emergency Contact Number"
-                            :_emergency_contact.text,
-                            lable: "Emergency Contact Number",icon: Icon(Icons.location_city)),
-                      ),
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      TextFormField(
-                        controller: _additionaltravel,
-                        keyboardType: TextInputType.text,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter the Additional Traveller";
-                          }
-                          return null;
-                        },
-                        decoration: inputDecoration(hinttext: (viewmodel?.data?.additionalTraveller == null)?"Additional Traveller":_additionaltravel.text,lable: "Additional Traveller",icon: Icon(Icons.location_city)),
-                      ),
+                      // SizedBox(
+                      //   height: 4.h,
+                      // ),
+                      // TextFormField(
+                      //   controller: _expertise,
+                      //   keyboardType: TextInputType.text,
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return "Enter the Expertise";
+                      //     }
+                      //     return null;
+                      //   },
+                      //   decoration: inputDecoration(hinttext:  (viewmodel?.data?.expertise == null)?"Expertise":_expertise.text,
+                      //       lable: "Expertise",icon: Icon(Icons.location_city)),
+                      // ),
+                      // SizedBox(
+                      //   height: 4.h,
+                      // ),
+                      // TextFormField(
+                      //   controller: _emergency_contact,
+                      //   keyboardType: TextInputType.phone,
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return "Enter the Emergency Contact Number";
+                      //     }
+                      //     return null;
+                      //   },
+                      //   decoration: inputDecoration(hinttext:
+                      //   (viewmodel?.data?.emergencyContact == null)?
+                      //   "Emergency Contact Number"
+                      //       :_emergency_contact.text,
+                      //       lable: "Emergency Contact Number",icon: Icon(Icons.location_city)),
+                      // ),
+                      // SizedBox(
+                      //   height: 4.h,
+                      // ),
+                      // TextFormField(
+                      //   controller: _additionaltravel,
+                      //   keyboardType: TextInputType.text,
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return "Enter the Additional Traveller";
+                      //     }
+                      //     return null;
+                      //   },
+                      //   decoration: inputDecoration(hinttext: (viewmodel?.data?.additionalTraveller == null)?"Additional Traveller":_additionaltravel.text,lable: "Additional Traveller",icon: Icon(Icons.location_city)),
+                      // ),
                       SizedBox(
                         height: 4.h,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: (){},
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 40.0,
-                              width: 40.w,
-                              decoration: BoxDecoration(
-                                  color: Color(0xffb4776e6),
-                                borderRadius: BorderRadius.circular(20.0)
-                              ),
-                             child: Text("Cancel",style: TextStyle(color: Colors.white,fontFamily: "Poppins",
-                             fontWeight: FontWeight.bold,fontSize: 12.sp
-                             ),)
-                            ),
-                          ),
                           GestureDetector(
                             onTap: (){
                               profile();
@@ -449,9 +431,10 @@ class _profile2State extends State<profile2> {
                                     fontWeight: FontWeight.bold,fontSize: 12.sp
                                 ),)
                             ),
-                          )
+                          ),
                         ],
-                      )
+                      ),
+                      SizedBox(height: 4.h,)
                     ],
                   ),
                 )
@@ -516,31 +499,23 @@ class _profile2State extends State<profile2> {
       data['emergency_contact'] = _emergency_contact.text.trim().toString();
       data['additional_traveller'] = _additionaltravel.text.trim().toString();
       data['date_of_birth'] = _date.text.trim().toString();
-      print(data);
-
       checkInternet().then((internet) async {
-
         if (internet) {
           authprovider().profileapi(data).then((Response response) async {
             print(response.body);
-
             profilemodel = ProfileModel.fromJson(json.decode(response.body));
-
             if (response.statusCode == 200 && profilemodel?.status == 1) {
               setState(() {
                 // isLoading = false;
               });
-
               if (kDebugMode) {
               }
               buildErrorDialog(context, "","Profile Updated Successfully");
-
             }
             else{
               // buildErrorDialog(context, "","Invalid login");
             }
           });
-
         } else {
           setState(() {
             // isLoading = false;
@@ -550,7 +525,6 @@ class _profile2State extends State<profile2> {
       });
   }
   view(){
-
     final Map<String, String> data = {
     };
     data['action']="view_profile";
@@ -573,7 +547,6 @@ class _profile2State extends State<profile2> {
             _additionaltravel.text=(viewmodel?.data?.additionalTraveller) ?? "";
             gender = (viewmodel?.data?.gender) ?? "";
             _date.text=(viewmodel?.data?.dateOfBirth) ?? "";
-            print(_expertise.text);
             // await SaveDataLocal.getDataFromLocal(userData!);
             if (kDebugMode) {
             }
@@ -586,7 +559,6 @@ class _profile2State extends State<profile2> {
             // buildErrorDialog(context, "","Invalid login");
           }
         });
-
       } else {
         setState(() {
           // isLoading = false;
@@ -651,27 +623,15 @@ class _profile2State extends State<profile2> {
     );
   }
   camera()async{
-    // PickedFile? pickedFile = await ImagePicker().getImage(
-    //     source: ImageSource.camera,
-    //     imageQuality: 50,
-    //     maxWidth: 350,
-    //     maxHeight: 350);
     XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     setState(() {
       _pickedFile = File(photo!.path);
     });
-
-      print("hiiii");
-      print("gbjb"+_pickedFile.toString());
-      // _cropImage(_pickedFile);
   }
   gallery()async{
     XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       _pickedFile = File(photo!.path);
     });
-
-    print("hiiii");
-    print("gbjb"+_pickedFile.toString());
   }
 }

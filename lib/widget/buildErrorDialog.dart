@@ -1,30 +1,31 @@
 import 'dart:io';
-
+import 'package:escapingplan/screen/packegedetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 buildErrorDialog(BuildContext context,String title, String contant,
     {VoidCallback? callback, String? buttonname}) {
-  Widget okButton = TextButton(
+  Widget okButton = GestureDetector(
     child: Container(
-      height: 40.0,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(20.0),
-          color: Color(0xffb4776e6)
+          // color: Color(0xffb4776e6)
       ),
       child: Center(
         child: Text(buttonname ?? 'OK',
-            // textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: Colors.white,
+            textAlign: TextAlign.center,
+            style:  TextStyle(
+              fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffb4776e6),
                 decorationColor: Colors.black,
                 fontFamily: 'poppins')),
       ),
     ),
-    onPressed: () {
+    onTap: () {
       // if (callback == null) {
       Navigator.pop(context);
       // } else {
@@ -34,55 +35,171 @@ buildErrorDialog(BuildContext context,String title, String contant,
   );
 
   if (Platform.isAndroid) {
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      titlePadding: EdgeInsets.only(left:5.w,top:3.w),
-      contentPadding: EdgeInsets.only(top: 0.0,bottom: 0.0,left: 20.0),
-      title: Text(title,
-          style: const TextStyle(
-              color: Colors.black,
-              decorationColor: Colors.black,
-              fontFamily: 'poppins')),
-      content: Text(contant,
-          style: const TextStyle(
-              color: Colors.black,
-              decorationColor: Colors.black,
-              fontFamily: 'poppins')),
-      actions: [
-        okButton,
-      ],
-    );
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: 70.w,
+            height: (title == "")?15.5.h :19.h,
+            decoration: BoxDecoration(
+                color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 3.h,),
+                (title != "")?Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal:3.w),
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style:  TextStyle(
+                          fontSize: 14.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            decorationColor: Colors.black,
+                            fontFamily: 'poppins'),
+                      ),
+                    ),
+                    SizedBox(height: 1.h),
+                  ],
+                ):Container(),
+
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal:3.w),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 1.h),
+                      Text(
+                        contant,
+                        textAlign: TextAlign.center,
+                        style:  TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            decorationColor: Colors.black,
+                            fontFamily: 'poppins'),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Divider(
+                  height: 1.0,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 2.h),
+             okButton,
+                SizedBox(height: 2.h,),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
   if (Platform.isIOS) {
-    CupertinoAlertDialog cupertinoAlertDialog = CupertinoAlertDialog(
-      title: Text(title,
-          style: const TextStyle(
-              color: Colors.black,
-              decorationColor: Colors.black,
-              fontFamily: 'poppins')),
-      content: Text(contant,
-          style: const TextStyle(
-              color: Colors.black,
-              decorationColor: Colors.black,
-              fontFamily: 'poppins')),
-      actions: [
-        okButton,
-      ],
-    );
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return cupertinoAlertDialog;
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: 70.w,
+            height: (title == "")?15.5.h :19.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 3.h,),
+                (title != "")?Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal:3.w),
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style:  TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            decorationColor: Colors.black,
+                            fontFamily: 'poppins'),
+                      ),
+                    ),
+                    SizedBox(height: 1.h),
+                  ],
+                ):Container(),
+
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal:3.w),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 1.h),
+                      Text(
+                        contant,
+                        textAlign: TextAlign.center,
+                        style:  TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            decorationColor: Colors.black,
+                            fontFamily: 'poppins'),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Divider(
+                  height: 1.0,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 2.h),
+                okButton,
+                SizedBox(height: 2.h,),
+              ],
+            ),
+          ),
+        );
       },
     );
+    // CupertinoAlertDialog cupertinoAlertDialog = CupertinoAlertDialog(
+    //   title: Text(title,
+    //       style: TextStyle(
+    //           color: Colors.black,
+    //           decorationColor: Colors.black,
+    //           fontFamily: 'poppins')),
+    //   content: Text(contant,
+    //       style: const TextStyle(
+    //           color: Colors.black,
+    //           decorationColor: Colors.black,
+    //           fontFamily: 'poppins')),
+    //   actions: [
+    //     okButton,
+    //   ],
+    // );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return cupertinoAlertDialog;
+    //   },
+    // );
   }
   // show the dialog
 }

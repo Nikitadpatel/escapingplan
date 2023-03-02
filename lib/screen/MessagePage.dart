@@ -8,6 +8,7 @@ import 'package:escapingplan/Provider/travelprovider.dart';
 import 'package:escapingplan/screen/mytrips1.dart';
 import 'package:escapingplan/widget/buildErrorDialog.dart';
 import 'package:escapingplan/widget/const.dart';
+import 'package:escapingplan/widget/load.dart';
 import 'package:escapingplan/widget/openimage.dart';
 import 'package:escapingplan/widget/pdfview.dart';
 import 'package:escapingplan/widget/video.dart';
@@ -46,6 +47,7 @@ class _MessagePageState extends State<MessagePage> {
   // final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   ImagePicker _picker = ImagePicker();
   File? _pickedFile = null;
+  bool isLoading =true;
   LocationPermission? permission;
   String? _currentAddress;
   // File? file;
@@ -90,7 +92,6 @@ class _MessagePageState extends State<MessagePage> {
     //   viewchat();
     // });
     view();
-
   }
   @override
   void dispose() {
@@ -100,437 +101,597 @@ class _MessagePageState extends State<MessagePage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        // backgroundColor: Color(0xffb4776e6),
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.0),
-          child: AppBar(
-            toolbarHeight: 10.h,
-            elevation: 0.0,
-            // backgroundColor: Colors.white,
-            backgroundColor: Color(0xffb4776e6),
-            automaticallyImplyLeading: false,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => mytrips1()));
-              },
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-                size: 22.sp,
+    return commanScreen(
+      scaffold: Scaffold(
+          backgroundColor: Colors.white,
+          // backgroundColor: Color(0xffb4776e6),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(70.0),
+            child: AppBar(
+              toolbarHeight: 10.h,
+              elevation: 0.0,
+              // backgroundColor: Colors.white,
+              backgroundColor: Color(0xffb4776e6),
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => mytrips1()));
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: 22.sp,
+                ),
               ),
-            ),
-            titleSpacing: 0,
-            title: Container(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Stack(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 7.w,
-                      child: ClipOval(
-                        child: (userData?.data?.clientimage != "" )?Image.network(
-                            userData?.data?.clientimage ?? "",
-                          fit: BoxFit.fitWidth,
-                          width: 14.w,
-                          height: 14.w,
-                        ):Image.asset("assets/profile_pic_placeholder.png", fit: BoxFit.cover,
-                          width: 14.w,
-                          height: 14.w,)
-                      ),
-                    ),
-                    Positioned(
-                      top: 10.w,
-                      left: 11.w,
-                      child: Container(
-                        height: 3.w,
-                        width: 3.w,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
+              titleSpacing: 0,
+              title: Container(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 7.w,
+                        child: ClipOval(
+                          child: (userData?.data?.clientimage != "" )?Image.network(
+                              userData?.data?.clientimage ?? "",
+                            fit: BoxFit.fitWidth,
+                            width: 14.w,
+                            height: 14.w,
+                          ):Image.asset("assets/profile_pic_placeholder.png", fit: BoxFit.cover,
+                            width: 14.w,
+                            height: 14.w,)
                         ),
                       ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      userData?.data?.clientname ?? "",
-                      style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          fontFamily: "Poppins"),
-                    ),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Online",
-                            style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                fontFamily: "Poppins"),
+                      Positioned(
+                        top: 10.w,
+                        left: 11.w,
+                        child: Container(
+                          height: 3.w,
+                          width: 3.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green,
                           ),
-                        ])
-                  ],
-                ),
-                // SizedBox(width: 42.w,),
-                // Image.asset("assets/dots.png",height: 20.0,width: 20.0,)
-              ],
-            )),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        userData?.data?.clientname ?? "",
+                        style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontFamily: "Poppins"),
+                      ),
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Online",
+                              style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                  fontFamily: "Poppins"),
+                            ),
+                          ])
+                    ],
+                  ),
+                  // SizedBox(width: 42.w,),
+                  // Image.asset("assets/dots.png",height: 20.0,width: 20.0,)
+                ],
+              )),
+            ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 79.5.h,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    // color:Colors.yellow,
-                    // color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(30.0),
-                        topLeft: Radius.circular(30.0))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SingleChildScrollView(
-                      child: Container(
-                        height: 79.5.h,
-                        child: ((messagemodel?.data?.length ?? 0 ) == 0)
-                                ? SizedBox(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Center(
-                                            child: CircularProgressIndicator(
-                                              color:Colors.black
-                                            )
-                                        //     Text(
-                                        //   'No Message ',
-                                        //   style: TextStyle(
-                                        //       color: Colors.black,
-                                        //       fontWeight: FontWeight.bold,
-                                        //       fontSize: 16.0),
-                                        // )
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Stack(
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: MediaQuery.of(context)
-                                            .size
-                                            .height,
-                                        child: ListView.builder(
-                                          reverse: true,
-                                          shrinkWrap: true,
-                                          controller: _scrollController,
-                                          itemCount:
-                                              messagemodel?.data?.length,
-                                          itemBuilder: (context, index) {
-                                            bool showSeparator = false;
-                                            var outputFormat2 =
-                                                DateFormat('dd/MM/yyyy');
-                                            var outputFormat1 =
-                                                DateFormat("dd");
-                                            DateTime parseDate = DateFormat(
-                                                    "yyyy-MM-dd hh:mm:ss")
-                                                .parse(messagemodel
-                                                        ?.data?[index].date ??
-                                                    "");
+          body: isLoading?Container():SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  height: 79.5.h,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      // color:Colors.yellow,
+                      // color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(30.0),
+                          topLeft: Radius.circular(30.0))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SingleChildScrollView(
+                        child: Container(
+                          height: 79.5.h,
+                          child: ((messagemodel?.data?.length ?? 0 ) == 0)
+                                  ? SizedBox(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          // Center(
+                                          //     child: CircularProgressIndicator(
+                                          //       color:Colors.black
+                                          //     )
+                                              Text(
+                                            'No Message ',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16.0),
+                                          )
 
-                                            if (index <
-                                                (messagemodel!.data!.length -
-                                                    1)) {
+                                        ],
+                                      ),
+                                    )
+                                  : Stack(
+                                      children: [
+                                        Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          child: ListView.builder(
+                                            reverse: true,
+                                            shrinkWrap: true,
+                                            controller: _scrollController,
+                                            itemCount:
+                                                messagemodel?.data?.length,
+                                            itemBuilder: (context, index) {
+                                              bool showSeparator = false;
                                               var outputFormat2 =
                                                   DateFormat('dd/MM/yyyy');
-                                              DateTime parseDate1 = DateFormat(
+                                              var outputFormat1 =
+                                                  DateFormat("dd");
+                                              DateTime parseDate = DateFormat(
                                                       "yyyy-MM-dd hh:mm:ss")
                                                   .parse(messagemodel
-                                                          ?.data?[index + 1]
-                                                          .date ??
+                                                          ?.data?[index].date ??
                                                       "");
-                                              var inputDate1 = DateTime.parse(
-                                                  parseDate1.toString());
-                                              outputDate2 = outputFormat2
-                                                  .format(inputDate1);
-                                            }
-                                            var inputDate = DateTime.parse(
-                                                parseDate.toString());
-                                            var outputFormat =
-                                                DateFormat(' hh:mm a');
-                                            var outputDate = outputFormat
-                                                .format(inputDate);
-                                            outputDate1 = outputFormat2
-                                                .format(inputDate);
-                                            date2 = outputFormat1
-                                                .format(inputDate);
 
-                                            diff = (DateTime.now().day) -
-                                                int.parse(date2.toString());
-                                            Counter();
+                                              if (index <
+                                                  (messagemodel!.data!.length -
+                                                      1)) {
+                                                var outputFormat2 =
+                                                    DateFormat('dd/MM/yyyy');
+                                                DateTime parseDate1 = DateFormat(
+                                                        "yyyy-MM-dd hh:mm:ss")
+                                                    .parse(messagemodel
+                                                            ?.data?[index + 1]
+                                                            .date ??
+                                                        "");
+                                                var inputDate1 = DateTime.parse(
+                                                    parseDate1.toString());
+                                                outputDate2 = outputFormat2
+                                                    .format(inputDate1);
+                                              }
+                                              var inputDate = DateTime.parse(
+                                                  parseDate.toString());
+                                              var outputFormat =
+                                                  DateFormat(' hh:mm a');
+                                              var outputDate = outputFormat
+                                                  .format(inputDate);
+                                              outputDate1 = outputFormat2
+                                                  .format(inputDate);
+                                              date2 = outputFormat1
+                                                  .format(inputDate);
 
-                                            // outputDate2 = outputFormat2.format(inputDate);
-                                            if (outputDate1 != outputDate2) {
-                                              showSeparator = true;
-                                            } else {
-                                              // showSeparator = true;
-                                            }
-                                            return Column(
-                                              children: [
-                                                (showSeparator)
-                                                    ? Column(
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 2.h,
-                                                          ),
-                                                          Container(
-                                                              margin:
-                                                                  EdgeInsets
-                                                                      .all(1
-                                                                          .w),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(1
-                                                                          .w),
-                                                              height: 4.h,
-                                                              width: 25.w,
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15.0),
-                                                                color: Colors
-                                                                    .black
-                                                                    .withOpacity(
-                                                                        0.3),
-                                                              ),
-                                                              child: Text(
-                                                                (diff == 0)
-                                                                    ? "Today"
-                                                                    : (diff ==
-                                                                            1)
-                                                                        ? "Yesterday"
-                                                                        : outputDate1
-                                                                            .toString(),
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12.sp,
-                                                                    fontFamily:
-                                                                        "Poppins"),
-                                                              )),
-                                                        ],
-                                                      )
-                                                    : Container(),
-                                                (senderid ==
-                                                        messagemodel
-                                                            ?.data?[index]
-                                                            .fromUserId)
-                                                    ? Container(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 20.w,
-                                                                right: 3.w,
-                                                                top: 0.h),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .end,
+                                              diff = (DateTime.now().day) -
+                                                  int.parse(date2.toString());
+                                              Counter();
+
+                                              // outputDate2 = outputFormat2.format(inputDate);
+                                              if (outputDate1 != outputDate2) {
+                                                showSeparator = true;
+                                              } else {
+                                                // showSeparator = true;
+                                              }
+                                              return Column(
+                                                children: [
+                                                  (showSeparator)
+                                                      ? Column(
                                                           children: [
-                                                            Text(
-                                                              outputDate,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade700,
-                                                                  fontFamily:
-                                                                      "Poppins",
-                                                                  fontSize:
-                                                                      10.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .normal),
-                                                            ),
                                                             SizedBox(
-                                                              width: 1.w,
+                                                              height: 2.h,
                                                             ),
-                                                            (messagemodel
-                                                                        ?.data?[
-                                                                            index]
-                                                                        .messageType ==
-                                                                    "image")
-                                                                ? Expanded(
-                                                                    child:
-                                                                        GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .push(MaterialPageRoute(builder: (context) => openimage(imageid: messagemodel?.data?[index].message ?? "")));
-                                                                      },
+                                                            Container(
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .all(1
+                                                                            .w),
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(1
+                                                                            .w),
+                                                                height: 4.h,
+                                                                width: 25.w,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15.0),
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.3),
+                                                                ),
+                                                                child: Text(
+                                                                  (diff == 0)
+                                                                      ? "Today"
+                                                                      : (diff ==
+                                                                              1)
+                                                                          ? "Yesterday"
+                                                                          : outputDate1
+                                                                              .toString(),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12.sp,
+                                                                      fontFamily:
+                                                                          "Poppins"),
+                                                                )),
+                                                          ],
+                                                        )
+                                                      : Container(),
+                                                  (senderid ==
+                                                          messagemodel
+                                                              ?.data?[index]
+                                                              .fromUserId)
+                                                      ? Container(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 20.w,
+                                                                  right: 3.w,
+                                                                  top: 0.h),
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              Text(
+                                                                outputDate,
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade700,
+                                                                    fontFamily:
+                                                                        "Poppins",
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                    fontStyle:
+                                                                        FontStyle
+                                                                            .normal),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 1.w,
+                                                              ),
+                                                              (messagemodel
+                                                                          ?.data?[
+                                                                              index]
+                                                                          .messageType ==
+                                                                      "image")
+                                                                  ? Expanded(
                                                                       child:
-                                                                          Container(
-                                                                        margin: EdgeInsets.only(
-                                                                            left: 2.w,
-                                                                            top: 2.h,
-                                                                            right: 2.w),
-                                                                        padding: EdgeInsets.symmetric(
-                                                                            horizontal: 5.w,
-                                                                            vertical: 1.h),
-                                                                        width:
-                                                                            60.w,
-                                                                        height:
-                                                                            40.w,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          // color:Colors.grey,
-                                                                          color:
-                                                                              Color(0xffb4776e6).withOpacity(0.3),
-                                                                          borderRadius: BorderRadius.only(
-                                                                              bottomLeft: Radius.circular(20.0),
-                                                                              topLeft: Radius.circular(20.0),
-                                                                              topRight: Radius.circular(20.0),
-                                                                              bottomRight: Radius.circular(0.0)),
-                                                                          shape:
-                                                                              BoxShape.rectangle,
-                                                                        ),
+                                                                          GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .push(MaterialPageRoute(builder: (context) => openimage(imageid: messagemodel?.data?[index].message ?? "")));
+                                                                        },
                                                                         child:
-                                                                            Image.network(
-                                                                          messagemodel?.data?[index].message ??
-                                                                              "",
-                                                                          fit:
-                                                                              BoxFit.cover,
+                                                                            Container(
+                                                                          margin: EdgeInsets.only(
+                                                                              left: 2.w,
+                                                                              top: 2.h,
+                                                                              right: 2.w),
+                                                                          padding: EdgeInsets.symmetric(
+                                                                              horizontal: 5.w,
+                                                                              vertical: 1.h),
+                                                                          width:
+                                                                              60.w,
+                                                                          height:
+                                                                              40.w,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            // color:Colors.grey,
+                                                                            color:
+                                                                                Color(0xffb4776e6).withOpacity(0.3),
+                                                                            borderRadius: BorderRadius.only(
+                                                                                bottomLeft: Radius.circular(20.0),
+                                                                                topLeft: Radius.circular(20.0),
+                                                                                topRight: Radius.circular(20.0),
+                                                                                bottomRight: Radius.circular(0.0)),
+                                                                            shape:
+                                                                                BoxShape.rectangle,
+                                                                          ),
+                                                                          child:
+                                                                              Image.network(
+                                                                            messagemodel?.data?[index].message ??
+                                                                                "",
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          ),
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                  )
-                                                                : (messagemodel
-                                                                            ?.data?[
-                                                                                index]
-                                                                            .messageType ==
-                                                                        "video")
-                                                                    ? Expanded(
-                                                                        child:
-                                                                            GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => Player(videoid: messagemodel?.data?[index].message ?? "")));
-                                                                          },
-                                                                          child: Container(
-                                                                              margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
-                                                                              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                                                                              width: 60.w,
-                                                                              height: 40.w,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color(0xffb4776e6).withOpacity(0.3),
-                                                                                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
-                                                                                shape: BoxShape.rectangle,
-                                                                              ),
-                                                                              child: addVideo(videoid: messagemodel?.data?[index].message ?? "")),
-                                                                        ),
-                                                                      )
-                                                                    : (messagemodel?.data?[index].messageType ==
-                                                                            "files")
-                                                                        ? Expanded(
-                                                                            child: GestureDetector(
-                                                                            onTap: () async {
-                                                                              final String? url = (messagemodel?.data?[index].message);
-                                                                              String fileExtension = path.extension(url!);
-                                                                              print(fileExtension.toString());
-                                                                              if(fileExtension==".txt"){
-                                                                                Navigator?.of(context).push(MaterialPageRoute(builder: (context)=>webview(data: messagemodel?.data?[index].message,)));
-
-                                                                              }
-                                                                              else{
-                                                                                var response = await http.get(Uri.parse((messagemodel?.data?[index].message).toString()));
-
-                                                                                String fileName = url.toString().split('/').last;
-                                                                                Directory? storageDirectory =Platform.isAndroid ?await getExternalStorageDirectory(): await getDownloadsDirectory();
-                                                                                String directoryPath = storageDirectory!.path;
-                                                                                File file = File('$directoryPath/$fileName');
-                                                                                // Directory directory = await getApplicationDocumentsDirectory();
-                                                                                await file.writeAsBytes(response.bodyBytes);
-                                                                                String filePath = '${storageDirectory.path}/$fileName';
-                                                                                print(filePath.toString());
-                                                                                try {
-                                                                                  print("object");
-                                                                                  final result = await OpenFile.open(filePath);
-
-                                                                                } catch (e) {
-                                                                                  print(e.toString());
-                                                                                }
-                                                                              }
-
-
+                                                                    )
+                                                                  : (messagemodel
+                                                                              ?.data?[
+                                                                                  index]
+                                                                              .messageType ==
+                                                                          "video")
+                                                                      ? Expanded(
+                                                                          child:
+                                                                              GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Player(videoid: messagemodel?.data?[index].message ?? "")));
                                                                             },
                                                                             child: Container(
                                                                                 margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
                                                                                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                                                                                width: 40.w,
+                                                                                width: 60.w,
+                                                                                height: 40.w,
                                                                                 decoration: BoxDecoration(
                                                                                   color: Color(0xffb4776e6).withOpacity(0.3),
                                                                                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
                                                                                   shape: BoxShape.rectangle,
                                                                                 ),
-                                                                               child: Text(messagemodel?.data?[index].message ?? "", textAlign: TextAlign.left, style: TextStyle(color: Colors.blue.shade700, fontFamily: "Poppins", fontSize: 12.sp)),
-                                                                                ),
-                                                                          ))
-                                                                        : (messagemodel?.data?[index].messageType == "location")
-                                                                            ? Expanded(
-                                                                                child: GestureDetector(
-                                                                                  onTap: () async {
+                                                                                child: addVideo(videoid: messagemodel?.data?[index].message ?? "")),
+                                                                          ),
+                                                                        )
+                                                                      : (messagemodel?.data?[index].messageType ==
+                                                                              "files")
+                                                                          ? Expanded(
+                                                                              child: GestureDetector(
+                                                                              onTap: () async {
+                                                                                final String? url = (messagemodel?.data?[index].message);
+                                                                                String fileExtension = path.extension(url!);
+                                                                                print(fileExtension.toString());
+                                                                                if(fileExtension==".txt"){
+                                                                                  Navigator?.of(context).push(MaterialPageRoute(builder: (context)=>webview(data: messagemodel?.data?[index].message,)));
 
-                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>webview2(data: messagemodel?.data?[index].message,)));
-                                                                                  },
+
+                                                                                }
+                                                                                else{
+                                                                                  var response = await http.get(Uri.parse((messagemodel?.data?[index].message).toString()));
+
+                                                                                  String fileName = url.toString().split('/').last;
+                                                                                  Directory? storageDirectory =Platform.isAndroid ?await getExternalStorageDirectory(): await getDownloadsDirectory();
+                                                                                  String directoryPath = storageDirectory!.path;
+                                                                                  File file = File('$directoryPath/$fileName');
+                                                                                  // Directory directory = await getApplicationDocumentsDirectory();
+                                                                                  await file.writeAsBytes(response.bodyBytes);
+                                                                                  String filePath = '${storageDirectory.path}/$fileName';
+                                                                                  print(filePath.toString());
+                                                                                  try {
+                                                                                    print("object");
+                                                                                    final result = await OpenFile.open(filePath);
+
+                                                                                  } catch (e) {
+                                                                                    print(e.toString());
+                                                                                  }
+                                                                                }
+
+
+                                                                              },
+                                                                              child: Container(
+                                                                                  margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
+                                                                                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                                                                                  width: 40.w,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Color(0xffb4776e6).withOpacity(0.3),
+                                                                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
+                                                                                    shape: BoxShape.rectangle,
+                                                                                  ),
+                                                                                 child: Text(messagemodel?.data?[index].message ?? "", textAlign: TextAlign.left, style: TextStyle(color: Colors.blue.shade700, fontFamily: "Poppins", fontSize: 12.sp)),
+                                                                                  ),
+                                                                            ))
+                                                                          : (messagemodel?.data?[index].messageType == "location")
+                                                                              ? Expanded(
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () async {
+
+                                                                                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>webview2(data: messagemodel?.data?[index].message,)));
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
+                                                                                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                                                                                      width: 40.w,
+                                                                                      // height:50.w,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: Color(0xffb4776e6).withOpacity(0.3),
+                                                                                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
+                                                                                        shape: BoxShape.rectangle,
+                                                                                      ),
+                                                                                      child:
+                                                                                      // webview2(data:messagemodel?.data?[index].message)
+                                                                                      Row(
+                                                                                        children: [
+                                                                                          Icon(Icons.location_on),
+                                                                                          Text("Tap here", textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
+                                                                                        ],
+                                                                                      )
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                              : Expanded(
                                                                                   child: Container(
                                                                                     margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
                                                                                     padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                                                                                     width: 40.w,
-                                                                                    // height:50.w,
                                                                                     decoration: BoxDecoration(
                                                                                       color: Color(0xffb4776e6).withOpacity(0.3),
                                                                                       borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
                                                                                       shape: BoxShape.rectangle,
                                                                                     ),
-                                                                                    child:
-                                                                                    // webview2(data:messagemodel?.data?[index].message)
-                                                                                    Row(
-                                                                                      children: [
-                                                                                        Icon(Icons.location_on),
-                                                                                        Text("Tap here", textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
-                                                                                      ],
-                                                                                    )
+                                                                                    child: Text(messagemodel?.data?[index].message ?? "", textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
+
                                                                                   ),
+                                                                                )
+                                                              // Image.asset("assets/profile.png",height: 5.w,width: 5.w,fit: BoxFit.cover,),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 3.w,
+                                                                  top: 1.h,
+                                                                  right: 10.w),
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              CircleAvatar(
+                                                                backgroundColor: Colors.transparent,
+                                                                radius: 5.w,
+                                                                child: ClipOval(
+                                                                    child: (userData?.data?.clientimage != "" )?Image.network(
+                                                                      userData?.data?.clientimage ?? "",
+                                                                      fit: BoxFit.fitWidth,
+                                                                      width: 10.w,
+                                                                      height: 10.w,
+                                                                    ):Image.asset("assets/profile_pic_placeholder.png", fit: BoxFit.cover,
+                                                                      width: 10.w,
+                                                                      height: 10.w,)
+                                                                ),
+                                                              ),
+                                                              // Image.asset(
+                                                              //   "assets/profile.png",
+                                                              //   height: 7.w,
+                                                              //   width: 7.w,
+                                                              //   fit: BoxFit
+                                                              //       .cover,
+                                                              // ),
+                                                              (messagemodel
+                                                                          ?.data?[
+                                                                              index]
+                                                                          .messageType ==
+                                                                      "image")
+                                                                  ? Expanded(
+                                                                      child:
+                                                                          GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .push(MaterialPageRoute(builder: (context) => openimage(imageid: messagemodel?.data?[index]?.message ?? "")));
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          margin: EdgeInsets.only(
+                                                                              left: 2.w,
+                                                                              top: 2.h,
+                                                                              right: 2.w),
+                                                                          padding: EdgeInsets.symmetric(
+                                                                              horizontal: 5.w,
+                                                                              vertical: 1.h),
+                                                                          width:
+                                                                              60.w,
+                                                                          height:
+                                                                              40.w,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.grey.withOpacity(0.3),
+                                                                            // color: Color(0xffb4776e6).withOpacity(0.3),
+                                                                            borderRadius: BorderRadius.only(
+                                                                                bottomLeft: Radius.circular(20.0),
+                                                                                topLeft: Radius.circular(20.0),
+                                                                                topRight: Radius.circular(20.0),
+                                                                                bottomRight: Radius.circular(0.0)),
+                                                                            shape:
+                                                                                BoxShape.rectangle,
+                                                                          ),
+                                                                          child:
+                                                                              Image.network(
+                                                                            messagemodel?.data?[index].message ??
+                                                                                "",
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : (messagemodel
+                                                                              ?.data?[
+                                                                                  index]
+                                                                              .messageType ==
+                                                                          "video")
+                                                                      ? Expanded(
+                                                                          child:
+                                                                              GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              Navigator.of(context).push(MaterialPageRoute(
+                                                                                  builder: (context) => Player(
+                                                                                        videoid: messagemodel?.data?[index]?.message,
+                                                                                      )));
+                                                                            },
+                                                                            child: Container(
+                                                                                margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
+                                                                                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                                                                                width: 60.w,
+                                                                                height: 40.w,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.grey.withOpacity(0.3),
+                                                                                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
+                                                                                  shape: BoxShape.rectangle,
                                                                                 ),
-                                                                              )
-                                                                            : Expanded(
+                                                                                child: addVideo(videoid: messagemodel?.data?[index].message ?? "")),
+                                                                          ),
+                                                                        )
+                                                                      : (messagemodel?.data?[index].messageType ==
+                                                                              "files")
+                                                                          ? Expanded(
+                                                                              child: GestureDetector(
+                                                                                onTap: () async {
+                                                                                  var response = await http.get(Uri.parse((messagemodel?.data?[index].message).toString()));
+                                                                                  final String? url = (messagemodel?.data?[index].message);
+                                                                                  String fileName = url.toString().split('/').last;
+                                                                                  Directory? storageDirectory =Platform.isAndroid ?await getExternalStorageDirectory(): await getDownloadsDirectory();
+                                                                                  String directoryPath = storageDirectory!.path;
+                                                                                  File file = File('$directoryPath/$fileName');
+                                                                                  // Directory directory = await getApplicationDocumentsDirectory();
+                                                                                  await file.writeAsBytes(response.bodyBytes);
+                                                                                  String filePath = '${storageDirectory.path}/$fileName';
+                                                                                  print(filePath.toString());
+                                                                                  try {
+                                                                                    final result = await OpenFile.open(filePath);
+                                                                                  } catch (e) {
+                                                                                    print(e.toString());
+                                                                                  }
+
+                                                                                  // String fileExtension = path.extension(url!);
+                                                                                  // print(fileExtension.toString());
+                                                                                  // if(fileExtension==".pdf"){
+                                                                                  //   Navigator?.of(context).push(MaterialPageRoute(builder: (context)=>pdfview(data: messagemodel?.data?[index].message,)));
+                                                                                  //
+                                                                                  // }
+                                                                                  // else{
+                                                                                  //
+                                                                                  //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>webview(data: messagemodel?.data?[index].message,)));
+                                                                                  // }
+                                                                                },
                                                                                 child: Container(
                                                                                   margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
                                                                                   padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
@@ -540,429 +701,273 @@ class _MessagePageState extends State<MessagePage> {
                                                                                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
                                                                                     shape: BoxShape.rectangle,
                                                                                   ),
-                                                                                  child: Text(messagemodel?.data?[index].message ?? "", textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
-
+                                                                                  child: Text(messagemodel?.data?[index].message ?? "", textAlign: TextAlign.left, style: TextStyle(color: Colors.blue.shade700, fontFamily: "Poppins", fontSize: 12.sp)),
                                                                                 ),
-                                                                              )
-                                                            // Image.asset("assets/profile.png",height: 5.w,width: 5.w,fit: BoxFit.cover,),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    : Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 3.w,
-                                                                top: 1.h,
-                                                                right: 10.w),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .end,
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor: Colors.transparent,
-                                                              radius: 5.w,
-                                                              child: ClipOval(
-                                                                  child: (userData?.data?.clientimage != "" )?Image.network(
-                                                                    userData?.data?.clientimage ?? "",
-                                                                    fit: BoxFit.fitWidth,
-                                                                    width: 10.w,
-                                                                    height: 10.w,
-                                                                  ):Image.asset("assets/profile_pic_placeholder.png", fit: BoxFit.cover,
-                                                                    width: 10.w,
-                                                                    height: 10.w,)
-                                                              ),
-                                                            ),
-                                                            // Image.asset(
-                                                            //   "assets/profile.png",
-                                                            //   height: 7.w,
-                                                            //   width: 7.w,
-                                                            //   fit: BoxFit
-                                                            //       .cover,
-                                                            // ),
-                                                            (messagemodel
-                                                                        ?.data?[
-                                                                            index]
-                                                                        .messageType ==
-                                                                    "image")
-                                                                ? Expanded(
-                                                                    child:
-                                                                        GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .push(MaterialPageRoute(builder: (context) => openimage(imageid: messagemodel?.data?[index]?.message ?? "")));
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        margin: EdgeInsets.only(
-                                                                            left: 2.w,
-                                                                            top: 2.h,
-                                                                            right: 2.w),
-                                                                        padding: EdgeInsets.symmetric(
-                                                                            horizontal: 5.w,
-                                                                            vertical: 1.h),
-                                                                        width:
-                                                                            60.w,
-                                                                        height:
-                                                                            40.w,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              Colors.grey.withOpacity(0.3),
-                                                                          // color: Color(0xffb4776e6).withOpacity(0.3),
-                                                                          borderRadius: BorderRadius.only(
-                                                                              bottomLeft: Radius.circular(20.0),
-                                                                              topLeft: Radius.circular(20.0),
-                                                                              topRight: Radius.circular(20.0),
-                                                                              bottomRight: Radius.circular(0.0)),
-                                                                          shape:
-                                                                              BoxShape.rectangle,
-                                                                        ),
-                                                                        child:
-                                                                            Image.network(
-                                                                          messagemodel?.data?[index].message ??
-                                                                              "",
-                                                                          fit:
-                                                                              BoxFit.cover,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                : (messagemodel
-                                                                            ?.data?[
-                                                                                index]
-                                                                            .messageType ==
-                                                                        "video")
-                                                                    ? Expanded(
-                                                                        child:
-                                                                            GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            Navigator.of(context).push(MaterialPageRoute(
-                                                                                builder: (context) => Player(
-                                                                                      videoid: messagemodel?.data?[index]?.message,
-                                                                                    )));
-                                                                          },
-                                                                          child: Container(
-                                                                              margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
-                                                                              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                                                                              width: 60.w,
-                                                                              height: 40.w,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Colors.grey.withOpacity(0.3),
-                                                                                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
-                                                                                shape: BoxShape.rectangle,
                                                                               ),
-                                                                              child: addVideo(videoid: messagemodel?.data?[index].message ?? "")),
-                                                                        ),
-                                                                      )
-                                                                    : (messagemodel?.data?[index].messageType ==
-                                                                            "files")
-                                                                        ? Expanded(
-                                                                            child: GestureDetector(
-                                                                              onTap: () async {
-                                                                                var response = await http.get(Uri.parse((messagemodel?.data?[index].message).toString()));
-                                                                                final String? url = (messagemodel?.data?[index].message);
-                                                                                String fileName = url.toString().split('/').last;
-                                                                                Directory? storageDirectory =Platform.isAndroid ?await getExternalStorageDirectory(): await getDownloadsDirectory();
-                                                                                String directoryPath = storageDirectory!.path;
-                                                                                File file = File('$directoryPath/$fileName');
-                                                                                // Directory directory = await getApplicationDocumentsDirectory();
-                                                                                await file.writeAsBytes(response.bodyBytes);
-                                                                                String filePath = '${storageDirectory.path}/$fileName';
-                                                                                print(filePath.toString());
-                                                                                try {
-                                                                                  final result = await OpenFile.open(filePath);
-                                                                                } catch (e) {
-                                                                                  print(e.toString());
-                                                                                }
+                                                                            )
+                                                                          : (messagemodel?.data?[index].messageType == "location")
+                                                                              ? Expanded(
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () async {
 
-                                                                                // String fileExtension = path.extension(url!);
-                                                                                // print(fileExtension.toString());
-                                                                                // if(fileExtension==".pdf"){
-                                                                                //   Navigator?.of(context).push(MaterialPageRoute(builder: (context)=>pdfview(data: messagemodel?.data?[index].message,)));
-                                                                                //
-                                                                                // }
-                                                                                // else{
-                                                                                //
-                                                                                //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>webview(data: messagemodel?.data?[index].message,)));
-                                                                                // }
-                                                                              },
-                                                                              child: Container(
-                                                                                margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
-                                                                                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                                                                                width: 40.w,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: Color(0xffb4776e6).withOpacity(0.3),
-                                                                                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
-                                                                                  shape: BoxShape.rectangle,
-                                                                                ),
-                                                                                child: Text(messagemodel?.data?[index].message ?? "", textAlign: TextAlign.left, style: TextStyle(color: Colors.blue.shade700, fontFamily: "Poppins", fontSize: 12.sp)),
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        : (messagemodel?.data?[index].messageType == "location")
-                                                                            ? Expanded(
-                                                                                child: GestureDetector(
-                                                                                  onTap: () async {
+                                                                                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>webview2(data: messagemodel?.data?[index].message,)));
 
-                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>webview2(data: messagemodel?.data?[index].message,)));
+                                                                                    },
+                                                                                    child: Container(
+                                                                                        margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
+                                                                                        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                                                                                        width: 40.w,
+                                                                                        // height:40.h,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: Colors.grey.withOpacity(0.3),
+                                                                                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
+                                                                                          shape: BoxShape.rectangle,
+                                                                                        ),
+                                                                                        child:
+                                                                                         // webview2(data: messagemodel?.data?[index].message,))
 
-                                                                                  },
-                                                                                  child: Container(
+
+
+                                                                                        Row(
+                                                                                          children: [
+                                                                                            Icon(Icons.location_on),
+                                                                                            Text(
+                                                                                               "Tap here",
+                                                                                                textAlign: TextAlign.left,
+                                                                                                style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
+                                                                                          ],
+                                                                                        ),
+                                                                                      )
+                                                                                        ))
+                                                                              : Expanded(
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () async {
+                                                                                      String? url = (messagemodel?.data?[index].message).toString();
+                                                                                      final uri = Uri.parse(url);
+                                                                                      if (await canLaunchUrl(uri)) {
+                                                                                        await launchUrl(uri);
+                                                                                      } else {
+                                                                                        throw 'Could not launch $url';
+                                                                                      }
+                                                                                    },
+                                                                                    child: Container(
                                                                                       margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
                                                                                       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                                                                                       width: 40.w,
-                                                                                      // height:40.h,
                                                                                       decoration: BoxDecoration(
                                                                                         color: Colors.grey.withOpacity(0.3),
                                                                                         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
                                                                                         shape: BoxShape.rectangle,
                                                                                       ),
-                                                                                      child:
-                                                                                       // webview2(data: messagemodel?.data?[index].message,))
-
-
-
-                                                                                      Row(
-                                                                                        children: [
-                                                                                          Icon(Icons.location_on),
-                                                                                          Text(
-                                                                                             "Tap here",
-                                                                                              textAlign: TextAlign.left,
-                                                                                              style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
-                                                                                        ],
-                                                                                      ),
-                                                                                    )
-                                                                                      ))
-                                                                            : Expanded(
-                                                                                child: GestureDetector(
-                                                                                  onTap: () async {
-                                                                                    String? url = (messagemodel?.data?[index].message).toString();
-                                                                                    final uri = Uri.parse(url);
-                                                                                    if (await canLaunchUrl(uri)) {
-                                                                                      await launchUrl(uri);
-                                                                                    } else {
-                                                                                      throw 'Could not launch $url';
-                                                                                    }
-                                                                                  },
-                                                                                  child: Container(
-                                                                                    margin: EdgeInsets.only(left: 2.w, top: 2.h, right: 2.w),
-                                                                                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                                                                                    width: 40.w,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: Colors.grey.withOpacity(0.3),
-                                                                                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(0.0)),
-                                                                                      shape: BoxShape.rectangle,
+                                                                                      child: Text(messagemodel?.data?[index].message ?? "", textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
                                                                                     ),
-                                                                                    child: Text(messagemodel?.data?[index].message ?? "", textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp)),
                                                                                   ),
                                                                                 ),
-                                                                              ),
 
-                                                            // VideoPlayerItem(
-                                                            // videoUrl:
-                                                            //     messagemodel?.data?[index].message ?? ""
+                                                              // VideoPlayerItem(
+                                                              // videoUrl:
+                                                              //     messagemodel?.data?[index].message ?? ""
 
-                                                            Text(
-                                                              outputDate,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade700,
-                                                                  fontFamily:
-                                                                      "Poppins",
-                                                                  fontSize:
-                                                                      10.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .normal),
-                                                            )
-                                                          ],
+                                                              Text(
+                                                                outputDate,
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade700,
+                                                                    fontFamily:
+                                                                        "Poppins",
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                    fontStyle:
+                                                                        FontStyle
+                                                                            .normal),
+                                                              )
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                              ],
-                                            );
-                                          },
-                                          // gridDelegate:
-                                          //     const SliverGridDelegateWithFixedCrossAxisCount(
-                                          //         crossAxisCount: 2),
+                                                ],
+                                              );
+                                            },
+                                            // gridDelegate:
+                                            //     const SliverGridDelegateWithFixedCrossAxisCount(
+                                            //         crossAxisCount: 2),
+                                          ),
                                         ),
-                                      ),
-                                      Positioned(
-                                          top: 10.0,
-                                          left: 30.w,
-                                          right: 30.w,
-                                          child: Container(
-                                              alignment: Alignment.center,
-                                              height: 3.h,
-                                              width: 20.w,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0),
-                                                color: Colors.black
-                                                    .withOpacity(0.3),
-                                              ),
-                                              child: Text(
-                                                (diff == 0)
-                                                    ? "Today"
-                                                    : (diff == 1)
-                                                        ? "Yesterday"
-                                                        : outputDate1
-                                                            .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    fontFamily: "Poppins"),
-                                              )))
-                                    ],
-                                  ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // SizedBox(height: 1.h,),
-              Container(
-                height: 60,
-                width: MediaQuery.of(context).size.width,
-                // margin: EdgeInsets.only(bottom: 2.h,top: 2.h,left: 3.w,right: 3.w),
-                // color: Colors.red,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 2.w,
-                    ),
-                    Container(
-                      child: GestureDetector(
-                        onTap: () {
-                          _showOuterDialog();
-                        },
-                        child: Icon(
-                          Icons.attach_file_outlined,
-                          color: Color(0xff1a54ac),
+                                        Positioned(
+                                            top: 10.0,
+                                            left: 30.w,
+                                            right: 30.w,
+                                            child: Container(
+                                                alignment: Alignment.center,
+                                                height: 3.h,
+                                                width: 20.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                  color: Colors.black
+                                                      .withOpacity(0.3),
+                                                ),
+                                                child: Text(
+                                                  (diff == 0)
+                                                      ? "Today"
+                                                      : (diff == 1)
+                                                          ? "Yesterday"
+                                                          : outputDate1
+                                                              .toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 12.sp,
+                                                      fontFamily: "Poppins"),
+                                                )))
+                                      ],
+                                    ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 2.w,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(0.0),
-                        child: Container(
-                          height: 40.0,
-                          width: 300.0,
-                          child: TextField(
-                            cursorColor: Colors.black,
-                            style: TextStyle(fontFamily: "Poppins"),
-                            keyboardType: TextInputType.text,
-                            controller: _chat,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 3.w, vertical: 1.w),
-                              filled: true,
-                              fillColor: Color(0xffb4776e6).withOpacity(0.1),
-                              // border:OutlineInputBorder(
-                              // borderRadius: BorderRadius.circular(20.0)
-                              // ),
-                              hintText: "Type your message....",
-                              hintStyle: TextStyle(
-                                  fontFamily: "Poppins", fontSize: 12.sp),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xff1a54ac),
+                    ],
+                  ),
+                ),
+                // SizedBox(height: 1.h,),
+                Container(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width,
+                  // margin: EdgeInsets.only(bottom: 2.h,top: 2.h,left: 3.w,right: 3.w),
+                  // color: Colors.red,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 2.w,
+                      ),
+                      Container(
+                        child: GestureDetector(
+                          onTap: () {
+                            _showOuterDialog();
+                          },
+                          child: Icon(
+                            Icons.attach_file_outlined,
+                            color: Color(0xff1a54ac),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 2.w,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(0.0),
+                          child: Container(
+                            height: 40.0,
+                            width: 300.0,
+                            child: TextField(
+                              cursorColor: Colors.black,
+                              style: TextStyle(fontFamily: "Poppins"),
+                              keyboardType: TextInputType.text,
+                              controller: _chat,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 3.w, vertical: 1.w),
+                                filled: true,
+                                fillColor: Color(0xffb4776e6).withOpacity(0.1),
+                                // border:OutlineInputBorder(
+                                // borderRadius: BorderRadius.circular(20.0)
+                                // ),
+                                hintText: "Type your message....",
+                                hintStyle: TextStyle(
+                                    fontFamily: "Poppins", fontSize: 12.sp),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xff1a54ac),
+                                    ),
+                                    borderRadius: BorderRadius.circular(50.0)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(50.0)),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    Icons.emoji_emotions_rounded,
+                                    color: Colors.grey,
                                   ),
-                                  borderRadius: BorderRadius.circular(50.0)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(50.0)),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  Icons.emoji_emotions_rounded,
-                                  color: Colors.grey,
+                                  onPressed: () {
+                                    setState(() {
+                                      emojiShowing = !emojiShowing!;
+                                    });
+                                  },
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    emojiShowing = !emojiShowing!;
-                                  });
-                                },
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 2.w,
-                    ),
-                    Container(
-                      // padding: const EdgeInsets.all(8.0),
-                      height: 10.w,
-                      width: 10.w,
-                      decoration: BoxDecoration(
-                          color: Color(0xff1a54ac), shape: BoxShape.circle),
-                      child: IconButton(
-                          onPressed: () {
-                            type = "text";
-                            addchat();
-                          },
-                          icon: Center(
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                              size: 6.w,
-                            ),
-                          )),
-                    ),
-                    SizedBox(
-                      width: 2.w,
-                    )
-                  ],
+                      SizedBox(
+                        width: 2.w,
+                      ),
+                      Container(
+                        // padding: const EdgeInsets.all(8.0),
+                        height: 10.w,
+                        width: 10.w,
+                        decoration: BoxDecoration(
+                            color: Color(0xff1a54ac), shape: BoxShape.circle),
+                        child: IconButton(
+                            onPressed: () {
+                              type = "text";
+                              addchat();
+                            },
+                            icon: Center(
+                              child: Icon(
+                                Icons.send,
+                                color: Colors.white,
+                                size: 6.w,
+                              ),
+                            )),
+                      ),
+                      SizedBox(
+                        width: 2.w,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              // Offstage(
-              //   offstage: !emojiShowing,
-              //   child: SizedBox(
-              //     height: 250,
-              //     // child: EmojiPicker(
-              //     //     onEmojiSelected: (Category? category, Emoji emoji) {
-              //     //       _onEmojiSelected(emoji);
-              //     //     },
-              //     //     onBackspacePressed: _onBackspacePressed,
-              //     //     config: Config(
-              //     //         columns: 7,
-              //     //         // Issue: https://github.com/flutter/flutter/issues/28894
-              //     //         emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-              //     //         verticalSpacing: 0,
-              //     //         horizontalSpacing: 0,
-              //     //         initCategory: Category.RECENT,
-              //     //         bgColor: const Color(0xFFF2F2F2),
-              //     //         indicatorColor: Colors.blue,
-              //     //         iconColor: Colors.grey,
-              //     //         iconColorSelected: Colors.blue,
-              //     //         // progressIndicatorColor: Colors.blue,
-              //     //         backspaceColor: Colors.blue,
-              //     //         showRecentsTab: true,
-              //     //         recentsLimit: 28,
-              //     //         noRecents: const Text(
-              //     //           'No Recents',
-              //     //           style: TextStyle(fontSize: 20, color: Colors.black26),
-              //     //           textAlign: TextAlign.center,
-              //     //         ),
-              //     //         tabIndicatorAnimDuration: kTabScrollDuration,
-              //     //         categoryIcons: const CategoryIcons(),
-              //     //         buttonMode: ButtonMode.MATERIAL)),
-              //   ),
-              // ),
-            ],
-          ),
-        ));
+                // Offstage(
+                //   offstage: !emojiShowing,
+                //   child: SizedBox(
+                //     height: 250,
+                //     // child: EmojiPicker(
+                //     //     onEmojiSelected: (Category? category, Emoji emoji) {
+                //     //       _onEmojiSelected(emoji);
+                //     //     },
+                //     //     onBackspacePressed: _onBackspacePressed,
+                //     //     config: Config(
+                //     //         columns: 7,
+                //     //         // Issue: https://github.com/flutter/flutter/issues/28894
+                //     //         emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
+                //     //         verticalSpacing: 0,
+                //     //         horizontalSpacing: 0,
+                //     //         initCategory: Category.RECENT,
+                //     //         bgColor: const Color(0xFFF2F2F2),
+                //     //         indicatorColor: Colors.blue,
+                //     //         iconColor: Colors.grey,
+                //     //         iconColorSelected: Colors.blue,
+                //     //         // progressIndicatorColor: Colors.blue,
+                //     //         backspaceColor: Colors.blue,
+                //     //         showRecentsTab: true,
+                //     //         recentsLimit: 28,
+                //     //         noRecents: const Text(
+                //     //           'No Recents',
+                //     //           style: TextStyle(fontSize: 20, color: Colors.black26),
+                //     //           textAlign: TextAlign.center,
+                //     //         ),
+                //     //         tabIndicatorAnimDuration: kTabScrollDuration,
+                //     //         categoryIcons: const CategoryIcons(),
+                //     //         buttonMode: ButtonMode.MATERIAL)),
+                //   ),
+                // ),
+              ],
+            ),
+          )),
+      isLoading: isLoading,
+    );
   }
 
   addchat() {
@@ -1029,14 +1034,6 @@ class _MessagePageState extends State<MessagePage> {
               // isLoading = false;
             });
             data1 = viewmodel?.data?.profileImg ?? "";
-            // await SaveDataLocal.saveLogInData(userData!);
-
-            // await SaveDataLocal.getDataFromLocal(userData!);
-            // if (kDebugMode) {}
-            // buildErrorDialog(context, "","Login Successfully");
-            //
-            //
-            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>login()));
           } else {
             // buildErrorDialog(context, "","Invalid login");
           }
@@ -1063,19 +1060,20 @@ class _MessagePageState extends State<MessagePage> {
           messagemodel = MessageModal.fromJson(json.decode(response.body));
           if (response.statusCode == 200 && messagemodel?.status == 1) {
             setState(() {
-              // isLoading = false;
+              isLoading = false;
             });
 
             if (kDebugMode) {}
-            // buildErrorDialog(context, "", "Login Successfully");
+
 
           } else {
-            // buildErrorDialog(context, "", "Invalid login");
+            isLoading = false;
+
           }
         });
       } else {
         setState(() {
-          // isLoading = false;
+          isLoading = false;
         });
         buildErrorDialog(context, 'Error', "Internate Required");
       }
@@ -1125,31 +1123,7 @@ class _MessagePageState extends State<MessagePage> {
             ),
           ),
         );
-        // : CupertinoAlertDialog(
-        //     title: const Text("From where do you want to take the photo?"),
-        //     content: SingleChildScrollView(
-        //       child: ListBody(
-        //         children: <Widget>[
-        //           const Padding(padding: EdgeInsets.all(8.0)),
-        //           GestureDetector(
-        //             child: const Text("Gallery"),
-        //             onTap: () {
-        //               Navigator.of(context).pop(false);
-        //               // getImageByGallary();
-        //             },
-        //           ),
-        //           const Padding(padding: EdgeInsets.all(8.0)),
-        //           GestureDetector(
-        //             child: const Text("Camera"),
-        //             onTap: () {
-        //               Navigator.of(context).pop(false);
-        //               // getImage();
-        //             },
-        //           )
-        //         ],
-        //       ),
-        //     ),
-        //   );
+
       },
     );
   }
@@ -1187,31 +1161,7 @@ class _MessagePageState extends State<MessagePage> {
             ),
           ),
         );
-        // : CupertinoAlertDialog(
-        //     title: const Text("From where do you want to take the photo?"),
-        //     content: SingleChildScrollView(
-        //       child: ListBody(
-        //         children: <Widget>[
-        //           const Padding(padding: EdgeInsets.all(8.0)),
-        //           GestureDetector(
-        //             child: const Text("Gallery"),
-        //             onTap: () {
-        //               Navigator.of(context).pop(false);
-        //               // getImageByGallary();
-        //             },
-        //           ),
-        //           const Padding(padding: EdgeInsets.all(8.0)),
-        //           GestureDetector(
-        //             child: const Text("Camera"),
-        //             onTap: () {
-        //               Navigator.of(context).pop(false);
-        //               // getImage();
-        //             },
-        //           )
-        //         ],
-        //       ),
-        //     ),
-        //   );
+
       },
     );
   }
@@ -1231,9 +1181,6 @@ class _MessagePageState extends State<MessagePage> {
     });
     addchat();
   }
-
-
-
   getvideogallery() async {
     XFile? photo = await _picker.pickVideo(source: ImageSource.gallery);
     setState(() {
@@ -1241,7 +1188,6 @@ class _MessagePageState extends State<MessagePage> {
     });
     addchat();
   }
-
   getimagegallery() async {
     XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -1249,7 +1195,6 @@ class _MessagePageState extends State<MessagePage> {
     });
     addchat();
   }
-
   getfile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
@@ -1263,7 +1208,6 @@ class _MessagePageState extends State<MessagePage> {
       // User canceled the picker
     }
   }
-
   getlocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -1278,29 +1222,6 @@ class _MessagePageState extends State<MessagePage> {
     } catch (e) {
       return null;
     }
-
-
-    //
-    // bool serviceEnabled = await determinePosition();
-    // if(serviceEnabled){
-    //   Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-    //       .then((Position position) async{
-    //     setState(() {
-    //       _currentPosition = position;
-    //       print(_currentPosition);
-    //     });
-    //     print("object");
-    //     List<Placemark> placemark = await placemarkFromCoordinates(
-    //         _currentPosition!.latitude, _currentPosition!.longitude);
-    //     Placemark place = placemark[0];
-    //     setState(() {
-    //       print("1234");
-    //       _currentAddress = "${place.locality},${place.postalCode},${place.street}";
-    //     });
-    //     // getaddress();
-    //   });
-    // }
-
   }
 
   getaddress() async {
@@ -1315,7 +1236,6 @@ class _MessagePageState extends State<MessagePage> {
       _currentAddress = "${place.locality},${place.postalCode},${place.street}";
     });
   }
-
   void _showOuterDialog() {
     showDialog(
       context: context,

@@ -16,11 +16,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:sizer/sizer.dart';
-
 class mytrips1 extends StatefulWidget {
-
   mytrips1({Key? key,}) : super(key: key);
-
   @override
   State<mytrips1> createState() => _mytrips1State();
 }
@@ -97,9 +94,9 @@ class _mytrips1State extends State<mytrips1> {
                                     fit: BoxFit.cover,
                                     ),
                               ),),
-                            placeholder: (context, url) =>  Container(
+                            placeholder: (context, url) =>  Center(
                                 child: CircularProgressIndicator(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                 )),
                             errorWidget: (context, url, error) =>
                                 Container(
@@ -117,232 +114,254 @@ class _mytrips1State extends State<mytrips1> {
             ),
           ),
         ),
-    body:Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding:  EdgeInsets.symmetric(horizontal:5.w),
-            child: Text("Discover ",style: TextStyle(color:Colors.black,fontWeight: FontWeight.w600,fontSize: 24.sp,fontFamily: "Poppins"),),
-          ),
-          SizedBox(height: 3.h,),
-          Container(
-            height: 6.h,
-            width: MediaQuery.of(context).size.width,
-            padding:  EdgeInsets.symmetric(horizontal:5.w),
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: place.length,
-                itemBuilder:(context,index){
-                  return GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        selectindex = index;
-                      });
-                      trip();
+    body:Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding:  EdgeInsets.symmetric(horizontal:5.w),
+          child: Text("Discover ",style: TextStyle(color:Colors.black,fontWeight: FontWeight.w600,fontSize: 24.sp,fontFamily: "Poppins"),),
+        ),
+        SizedBox(height: 3.h,),
+        Container(
+          height: 6.h,
+          width: MediaQuery.of(context).size.width,
+          padding:  EdgeInsets.symmetric(horizontal:5.w),
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: place.length,
+              itemBuilder:(context,index){
+                return GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      selectindex = index;
+                    });
+                    trip();
 
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 5.h,
-                          margin: EdgeInsets.only(right: 3.w),
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 5.h,
+                        margin: EdgeInsets.only(right: 3.w),
 
-                          // padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 0.h),
-                          child: Center(
-                            child: Text(place[index],style: TextStyle(
-                                fontFamily: "Poppins",fontWeight:
-                            FontWeight.bold,
-                                color:(selectindex != index) ? Colors.grey.shade600 :Color(0xffb4776e6),
-                          ),
-                        ),),),
-                        (selectindex !=index)?Container():
-                        Center(
-                          child: Container(
-                            height: 7.0,
-                            width: 7.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                                color: Color(0xffb4776e6)
-                            )
-                          ),
+                        // padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 0.h),
+                        child: Center(
+                          child: Text(place[index],style: TextStyle(
+                              fontFamily: "Poppins",fontWeight:
+                          FontWeight.bold,
+                              color:(selectindex != index) ? Colors.grey.shade600 :Color(0xffb4776e6),
                         ),
-                      ],
-                    ),
-                  );
-                } ),
-          ),
-          SizedBox(height: 3.h,),
-          Padding(
+                      ),),),
+                      (selectindex !=index)?Container():
+                      Center(
+                        child: Container(
+                          height: 7.0,
+                          width: 7.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                              color: Color(0xffb4776e6)
+                          )
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } ),
+        ),
+        SizedBox(height: 3.h,),
+
+            // (selectindex == 0) ? (adventure.length.toString()) + "  All":(selectindex == 1) ? sights.length.toString() +"  Upcoming" :adventure.length.toString()+"  Recently visited",
+        SizedBox(height: 2.h,),
+        (tripmodel?.data?.length == 0)? Container(
+            width: MediaQuery.of(context).size.width,
+            height: 40.h,
+            alignment: Alignment.center,
             padding:  EdgeInsets.symmetric(horizontal:5.w),
             child:
             Text(
-                ((tripmodel?.data?.length).toString() == "0") ? "No Trip available for " + (place[selectindex!].toString()):"")) ,
-              // (selectindex == 0) ? (adventure.length.toString()) + "  All":(selectindex == 1) ? sights.length.toString() +"  Upcoming" :adventure.length.toString()+"  Recently visited",
-          SizedBox(height: 2.h,),
-          (tripmodel?.data?.length == 0)?Container():
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 40.h,
-            child:ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              scrollDirection: Axis.horizontal,
-              itemCount:tripmodel?.data?.length,
-              itemBuilder: (context,index){
-                return GestureDetector(
-                  onTap: (){
-                      setState(() {
-                        selectindex2 = index;
+                ((tripmodel?.data?.length).toString() == "0") ? "No Trip " + (place[selectindex!].toString()):"",
+                style:  TextStyle(
+                    color:Colors.black,
+                    fontSize: 16.sp,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w600)
+            )):
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: 40.h,
+          child:ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            scrollDirection: Axis.horizontal,
+            itemCount:tripmodel?.data?.length,
+            itemBuilder: (context,index){
+              return GestureDetector(
+                onTap: (){
+                    setState(() {
+                      selectindex2 = index;
 
-                        print("index"+index.toString());
-                      });
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> packagedetail(
-                        iid:(tripmodel?.data?[index].itineraryId).toString())));
-                  },
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 40.h,
-                        width:80.w,
-                        padding:EdgeInsets.symmetric(horizontal:3.w,vertical:1.h ),
-                        child:
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: CachedNetworkImage(
-                            imageUrl: tripmodel?.data?[index].galleryImage?[0] ?? '',
-                            placeholder: (context, url) =>  Center(
-                                child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) =>
-                            Container(
-                              color:Colors.white
-                            ),
-                                // Image.asset('assets/profile_pic_placeholder.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top:3.h,
-                        left:61.w,
-                        right:2.w,
-                        child: Container(
-                          height:10.w,
-                          width:10.w,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            // color:Color(0xff829bbc)
-                            color: Colors.white,
-                          ),
-                          child: IconButton(
-                              onPressed: (){
-                                setState(() {
-                                  selectindex2 = index;
-                                });
-                                favouruteap();
-                                trip();
-                              },
-                              icon: Icon(((tripmodel?.data?[index].favourite).toString() == "0") ?Icons.favorite_outline : Icons.favorite,color: Colors.blue,)
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 28.h,
-                        left: 3.w,
-                        // right: 10.w,
-                        child: Container(
-                          height: 8.h,
-                          width:74.w,
-                          color: Colors.black.withOpacity(0.3),
-                          child: Text((tripmodel?.data?[index].title) ?? "",style: TextStyle(color:Colors.white,fontSize: 20.sp,fontFamily: "Poppins",
-                              fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),)
-                    ],
-                  )
-                );
-              },
-            )
-
-          ),
-          SizedBox(height: 3.h,),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 3.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Feeling Adventurous?",style: TextStyle(color:Colors.black ,fontSize: 18.sp,fontFamily: "Poppins",
-                    fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,),
-                TextButton(
-                    onPressed: (){},
-                    child: Text("Show all",style: TextStyle(color: Color(0xffb4776e6) ,fontSize: 12.sp,fontFamily: "Poppins",
-                        fontWeight: FontWeight.w600),))
-              ],
-            ),
-          ),
-          SizedBox(height: 3.h,),
-          Container(
-            height: 11.h,
-            width: MediaQuery.of(context).size.width,
-            padding:  EdgeInsets.only(left:5.w),
-            decoration: BoxDecoration(
-                // gradient: LinearGradient(
-                //     begin: Alignment.bottomCenter,
-                //     end: Alignment.topCenter,
-                //     colors: [
-                //       Colors.blue.shade50,
-                //       Colors.white,
-                //     ]
-                // )
-            ),
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: icons.length,
-                itemBuilder:(context,index){
-                  return GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        selectindex1 = index;
-                      });
-                    },
-                    child: Container(
-                      height: 10.h,
-                      width: 17.w,
-                      child: Column(
-                        children: [
+                      print("index"+index.toString());
+                    });
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> packagedetail(
+                      iid:(tripmodel?.data?[index].itineraryId).toString())));
+                },
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 40.h,
+                      width:80.w,
+                      padding:EdgeInsets.symmetric(horizontal:3.w,vertical:1.h ),
+                      child:
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: CachedNetworkImage(
+                          imageUrl: tripmodel?.data?[index].galleryImage?[0] ?? '',
+                          placeholder: (context, url) =>  Center(
+                              child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
                           Container(
-                            // height: 5.h,
-                            // width: 12.w,
-                            margin: EdgeInsets.only(right: 5.w),
-                            padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 0.h),
-                            child: Image.asset(icons[index].image.toString(),fit: BoxFit.cover,height: 10.w,width: 10.w,color: Color(0xffb4776e6))
+                            color:Colors.white
                           ),
-                          SizedBox(height: 1.h,),
-                          Center(
-                            child: Text(icons[index].name.toString(),style: TextStyle(color:Colors.black ,fontSize: 8.sp,fontFamily: "Poppins",
-                                fontWeight: FontWeight.normal),
-                              textAlign: TextAlign.center,),
-                          ),
-
-                        ],
+                              // Image.asset('assets/profile_pic_placeholder.png'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  );
-                } ),
+                    Positioned(
+                      top:3.h,
+                      left:61.w,
+                      right:2.w,
+                      child: Container(
+                        height:10.w,
+                        width:10.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          // color:Color(0xff829bbc)
+                          color: Colors.white,
+                        ),
+                        child: IconButton(
+                            onPressed: (){
+                              setState(() {
+                                selectindex2 = index;
+                              });
+                              favouruteap();
+                              trip();
+                            },
+                            icon: Icon(((tripmodel?.data?[index].favourite).toString() == "0") ?Icons.favorite_outline : Icons.favorite,color: Colors.blue,)
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 28.h,
+                      left: 3.w,
+                      right: 3.w,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 8.h,
+                        // width:74.w,
+                        color: Colors.black.withOpacity(0.3),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+
+                              child: Text((tripmodel?.data?[index].title) ?? "",
+                                style: TextStyle(
+                                    color:Colors.white,
+                                    fontSize: 20.sp,
+                                    fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w600),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),)
+                  ],
+                )
+              );
+            },
+          )
+        ),
+        SizedBox(height: 3.h,),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 3.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Feeling Adventurous?",style: TextStyle(color:Colors.black ,fontSize: 18.sp,fontFamily: "Poppins",
+                  fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,),
+              TextButton(
+                  onPressed: (){
+                    adventure();
+                  },
+                  child: Text("Show all",style: TextStyle(color: Color(0xffb4776e6) ,fontSize: 12.sp,fontFamily: "Poppins",
+                      fontWeight: FontWeight.w600),))
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 3.h,),
+        Container(
+          height: 11.h,
+          width: MediaQuery.of(context).size.width,
+          padding:  EdgeInsets.only(left:5.w),
+          decoration: BoxDecoration(
+              // gradient: LinearGradient(
+              //     begin: Alignment.bottomCenter,
+              //     end: Alignment.topCenter,
+              //     colors: [
+              //       Colors.blue.shade50,
+              //       Colors.white,
+              //     ]
+              // )
+          ),
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: icons.length,
+              itemBuilder:(context,index){
+                return GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      selectindex1 = index;
+                    });
+                  },
+                  child: Container(
+                    height: 10.h,
+                    width: 17.w,
+                    child: Column(
+                      children: [
+                        Container(
+                          // height: 5.h,
+                          // width: 12.w,
+                          margin: EdgeInsets.only(right: 5.w),
+                          padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 0.h),
+                          child: Image.asset(icons[index].image.toString(),fit: BoxFit.cover,height: 10.w,width: 10.w,color: Color(0xffb4776e6))
+                        ),
+                        SizedBox(height: 1.h,),
+                        Center(
+                          child: Text(icons[index].name.toString(),style: TextStyle(color:Colors.black ,fontSize: 8.sp,fontFamily: "Poppins",
+                              fontWeight: FontWeight.normal),
+                            textAlign: TextAlign.center,),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                );
+              } ),
+        ),
+      ],
     ) ,
       ),
       isLoading:isLoading,
@@ -395,7 +414,7 @@ class _mytrips1State extends State<mytrips1> {
             setState(() {
               isLoading = false;
             });
-
+              print(tripmodel?.data?[selectindex!].favourite);
             if (kDebugMode) {}
           } else {
             setState(() {
@@ -414,6 +433,7 @@ class _mytrips1State extends State<mytrips1> {
     });
   }
   favouruteap(){
+    print(tripmodel?.data?[selectindex2!].itineraryId);
     final Map<String, String> data = {};
     data['itinerary_id'] = (tripmodel?.data?[selectindex2!].itineraryId).toString();
     data['action'] = 'favourite_trip';
@@ -443,5 +463,63 @@ class _mytrips1State extends State<mytrips1> {
         buildErrorDialog(context, 'Error', "Internate Required");
       }
     });
+  }
+  adventure(){
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: new Text('Select from below'),
+        content: Container(
+          height: 185.0,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      mainAxisSpacing: 1.5.h,
+                      childAspectRatio: 1.3,
+                      crossAxisCount: 3,
+                    ),
+              scrollDirection: Axis.vertical,
+              physics: BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: icons.length,
+              itemBuilder:(context,index){
+                return GestureDetector(
+                  onTap: (){
+              Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    height: 10.h,
+                    width: 17.w,
+                    child: Column(
+                      children: [
+                        Container(
+                          // height: 5.h,
+                          // width: 12.w,
+                            margin: EdgeInsets.only(right: 5.w),
+                            padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 0.h),
+                            child: Image.asset(icons[index].image.toString(),fit: BoxFit.cover,height: 10.w,width: 10.w,color: Color(0xffb4776e6))
+                        ),
+                        SizedBox(height: 1.h,),
+                        Center(
+                          child: Text(icons[index].name.toString(),style: TextStyle(color:Colors.black ,fontSize: 8.sp,fontFamily: "Poppins",
+                              fontWeight: FontWeight.normal),
+                            textAlign: TextAlign.center,),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                );
+              } )
+
+        ),
+      ),
+    );
+
   }
 }

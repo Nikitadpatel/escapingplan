@@ -1,7 +1,12 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:escapingplan/Modal/agentmodal.dart';
+import 'package:escapingplan/Modal/detailmodel.dart';
 import 'package:escapingplan/Modal/loginmodel.dart';
+import 'package:escapingplan/Modal/partnersmodal.dart';
+import 'package:escapingplan/widget/extra%20travellers.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../Modal/extramodal.dart';
 
 Future<bool> checkInternet() async {
   var connectivityResult = await (Connectivity().checkConnectivity());
@@ -12,7 +17,12 @@ Future<bool> checkInternet() async {
   }
   return false;
 }
+
 UserModal? userData;
+Partnersmodal? partnerdata;
+MyagentModal? agentdata;
+ExtratravModal? extradata;
+DetailModel? detailmodal;
 const String baseUrl = 'https://travel.fableadtechnolabs.com/admin/api';
 
 Future<bool> determinePosition() async {

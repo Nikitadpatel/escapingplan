@@ -1,4 +1,5 @@
 import 'package:escapingplan/Provider/authprovider.dart';
+import 'package:escapingplan/Provider/homeProvider.dart';
 import 'package:escapingplan/Provider/travelprovider.dart';
 import 'package:escapingplan/screen/splashscreen2.dart';
 import 'package:escapingplan/widget/videoplayer.dart';
@@ -16,26 +17,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Sizer(
-      builder: (context, orientation, deviceType) {
+    return Sizer(builder: (context, orientation, deviceType) {
       return MultiProvider(
         providers: [
-          ChangeNotifierProvider(
-              create: (context) => authprovider()),
-          ChangeNotifierProvider(
-              create: (context) => travelprovider()),
+          ChangeNotifierProvider(create: (context) => authprovider()),
+          ChangeNotifierProvider(create: (context) => travelprovider()),
+          ChangeNotifierProvider(create: (context) => HomeProvider()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: ThemeData(
-
-            primarySwatch: Colors.blue,
-          ),
-          home:splashscreen2()
-        ),
-      );}
-    );
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: splashscreen2()),
+      );
+    });
   }
 }
-

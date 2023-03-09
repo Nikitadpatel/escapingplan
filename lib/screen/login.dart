@@ -35,7 +35,7 @@ class _login1State extends State<login1> {
         width: double.infinity,
         height: double.infinity,
         child: Image.asset(
-          "assets/splash2.jpg",
+          "assets/escape.jpg",
           height: double.infinity,
           width: double.infinity,
           fit: BoxFit.cover,
@@ -59,35 +59,35 @@ class _login1State extends State<login1> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: 30.h,
+                    height: 40.h,
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.login_sharp,
-                        size: 25.sp,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        // padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: Text(
-                          "LOGIN",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 28.sp,
-                              fontFamily: "Poppins"),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Icon(
+                  //       Icons.login_sharp,
+                  //       size: 25.sp,
+                  //       color: Colors.white,
+                  //     ),
+                  //     SizedBox(
+                  //       width: 10.0,
+                  //     ),
+                  //     Container(
+                  //       alignment: Alignment.center,
+                  //       // padding: EdgeInsets.symmetric(horizontal: 30.w),
+                  //       child: Text(
+                  //         "LOGIN",
+                  //         style: TextStyle(
+                  //             fontWeight: FontWeight.bold,
+                  //             color: Colors.white,
+                  //             fontSize: 28.sp,
+                  //             fontFamily: "Poppins"),
+                  //         textAlign: TextAlign.left,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 3.h),
                   Container(
                     alignment: Alignment.center,
@@ -132,18 +132,17 @@ class _login1State extends State<login1> {
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(horizontal: 3.w),
                     child: TextFormField(
-
                       obscureText: visible,
                       keyboardType: TextInputType.text,
                       controller: _password,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Please enter your password';
+                          return 'Please enter your passcode';
                         }
                         return null;
                       },
                       decoration: inputDecoration(
-                        hint: "Password",
+                        hint: "Itinerary Passcode",
                         icon1: Icon(Icons.lock),
                         click: () {
                           setState(() {
@@ -157,24 +156,24 @@ class _login1State extends State<login1> {
                     ),
                   ),
 
-                  SizedBox(height: 2.h),
-                  Padding(
-                    padding: EdgeInsets.only(left: 49.w, right: 3.w),
-                    child: TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => forgetpass()));
-                        },
-                        child: Text(
-                          "Forgot Password?",
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 14.sp,
-                              fontFamily: "Poppins"),
-                        )),
-                  ),
+                  // SizedBox(height: 2.h),
+                  // Padding(
+                  //   padding: EdgeInsets.only(left: 49.w, right: 3.w),
+                  //   child: TextButton(
+                  //       onPressed: () {
+                  //         Navigator.of(context).push(MaterialPageRoute(
+                  //             builder: (context) => forgetpass()));
+                  //       },
+                  //       child: Text(
+                  //         "Forgot Password?",
+                  //         style: TextStyle(
+                  //             decoration: TextDecoration.underline,
+                  //             fontWeight: FontWeight.bold,
+                  //             color: Colors.white,
+                  //             fontSize: 14.sp,
+                  //             fontFamily: "Poppins"),
+                  //       )),
+                  // ),
                   SizedBox(height: 4.h),
                   Padding(
                     padding: EdgeInsets.all(3.w),
@@ -208,7 +207,6 @@ class _login1State extends State<login1> {
                           )),
                         ),
                         onPressed: () {
-
                           login();
                         },
                         child: Row(
@@ -246,12 +244,12 @@ class _login1State extends State<login1> {
     ]);
   }
 
-  InputDecoration inputDecoration(
-      {required Icon icon1,
-      required VoidCallback click,
-      required String hint,
-      required Icon icon,
-     }) {
+  InputDecoration inputDecoration({
+    required Icon icon1,
+    required VoidCallback click,
+    required String hint,
+    required Icon icon,
+  }) {
     return InputDecoration(
         contentPadding: EdgeInsets.all(2.0),
         hintStyle: TextStyle(
@@ -295,7 +293,7 @@ class _login1State extends State<login1> {
       final Map<String, String> data = {};
 
       data['email'] = _email.text.trim().toString();
-      data['password'] = _password.text.trim().toString();
+      data['passcode'] = _password.text.trim().toString();
       data['action'] = 'login';
 
       checkInternet().then((internet) async {
@@ -311,11 +309,11 @@ class _login1State extends State<login1> {
               if (kDebugMode) {}
               // buildErrorDialog(context, "", "Login Successfully");
 
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => mytrips1()));
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => mytrips1()));
             } else {
-
-              buildErrorDialog(context, "Login Error", (userData?.message).toString());
+              buildErrorDialog(
+                  context, "Login Error", (userData?.message).toString());
             }
           });
         } else {

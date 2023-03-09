@@ -4,14 +4,16 @@ import 'package:escapingplan/widget/const.dart';
 import 'package:escapingplan/widget/response.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-class authprovider with ChangeNotifier{
+
+class authprovider with ChangeNotifier {
   Map<String, String> headers = {
     'Authorization': 'hXuRUGsEGuhGf6KG',
   };
-  Future<http.Response> loginapi(Map<String,String>bodyData) async {
+  Future<http.Response> loginapi(Map<String, String> bodyData) async {
     const url = '$baseUrl/?action=login';
     var responseJson;
-    final response = await http.post(Uri.parse(url), body:bodyData , headers:headers )
+    final response = await http
+        .post(Uri.parse(url), body: bodyData, headers: headers)
         .timeout(
       const Duration(seconds: 30),
       onTimeout: () {
@@ -21,7 +23,8 @@ class authprovider with ChangeNotifier{
     responseJson = responses(response);
     return responseJson;
   }
-  Future<http.Response> profileapi(Map<String,String>bodyData) async {
+
+  Future<http.Response> profileapi(Map<String, String> bodyData) async {
     const url = '$baseUrl/?action=change_profile';
     var responseJson;
     try {
@@ -29,7 +32,7 @@ class authprovider with ChangeNotifier{
       imageUploadRequest.headers.addAll(headers);
       if (bodyData['profile_image']?.isNotEmpty ?? false) {
         final file = await http.MultipartFile.fromPath(
-            'profile_image', bodyData['profile_image']?? '');
+            'profile_image', bodyData['profile_image'] ?? '');
         imageUploadRequest.files.add(file);
       }
       imageUploadRequest.fields.addAll(bodyData);
@@ -40,10 +43,12 @@ class authprovider with ChangeNotifier{
     }
     return responseJson;
   }
-  Future<http.Response> forgetapi(Map<String,String>bodyData) async {
+
+  Future<http.Response> forgetapi(Map<String, String> bodyData) async {
     const url = '$baseUrl/?action=forget_password';
     var responseJson;
-    final response = await http.post(Uri.parse(url), body:bodyData , headers:headers )
+    final response = await http
+        .post(Uri.parse(url), body: bodyData, headers: headers)
         .timeout(
       const Duration(seconds: 30),
       onTimeout: () {
@@ -53,10 +58,57 @@ class authprovider with ChangeNotifier{
     responseJson = responses(response);
     return responseJson;
   }
-  Future<http.Response> viewapi(Map<String,String>bodyData) async {
+
+  Future<http.Response> viewapi(Map<String, String> bodyData) async {
     const url = '$baseUrl/?action=view_profile';
     var responseJson;
-    final response = await http.post(Uri.parse(url), body:bodyData , headers:headers )
+    final response = await http
+        .post(Uri.parse(url), body: bodyData, headers: headers)
+        .timeout(
+      const Duration(seconds: 30),
+      onTimeout: () {
+        throw const SocketException('Something went wrong');
+      },
+    );
+    responseJson = responses(response);
+    return responseJson;
+  }
+
+  Future<http.Response> partnerapi(Map<String, String> bodyData) async {
+    const url = '$baseUrl/?action=display_partners';
+    var responseJson;
+    final response = await http
+        .post(Uri.parse(url), body: bodyData, headers: headers)
+        .timeout(
+      const Duration(seconds: 30),
+      onTimeout: () {
+        throw const SocketException('Something went wrong');
+      },
+    );
+    responseJson = responses(response);
+    return responseJson;
+  }
+
+  Future<http.Response> agentapi(Map<String, String> bodyData) async {
+    const url = '$baseUrl/?action=my_agent';
+    var responseJson;
+    final response = await http
+        .post(Uri.parse(url), body: bodyData, headers: headers)
+        .timeout(
+      const Duration(seconds: 30),
+      onTimeout: () {
+        throw const SocketException('Something went wrong');
+      },
+    );
+    responseJson = responses(response);
+    return responseJson;
+  }
+
+  Future<http.Response> extrapartnerapi(Map<String, String> bodyData) async {
+    const url = '$baseUrl/?action=extra_traveller';
+    var responseJson;
+    final response = await http
+        .post(Uri.parse(url), body: bodyData, headers: headers)
         .timeout(
       const Duration(seconds: 30),
       onTimeout: () {

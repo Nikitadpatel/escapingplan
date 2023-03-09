@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -15,7 +12,7 @@ class addVideo extends StatefulWidget {
 
 class _addVideoState extends State<addVideo> {
   late VideoPlayerController _controller;
-  bool isPlay=false;
+  bool isPlay = false;
 
   @override
   void initState() {
@@ -43,21 +40,22 @@ class _addVideoState extends State<addVideo> {
   void dispose() {
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: Stack(
         children: [
-          VideoPlayer(_controller!),
+          VideoPlayer(_controller),
           Align(
             alignment: Alignment.center,
             child: IconButton(
               onPressed: () {
                 if (isPlay) {
-                  _controller!.pause();
+                  _controller.pause();
                 } else {
-                  _controller!.play();
+                  _controller.play();
                 }
 
                 setState(() {
@@ -71,7 +69,7 @@ class _addVideoState extends State<addVideo> {
           ),
         ],
       ),
-    );;
-
+    );
+    ;
   }
 }

@@ -7,7 +7,6 @@ class SaveDataLocal {
   static SharedPreferences? prefs;
   static String userData = 'UserData';
 
-
   static saveLogInData(UserModal userModel) async {
     prefs = await SharedPreferences.getInstance();
     String json = jsonEncode(userModel.toJson());
